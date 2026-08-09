@@ -19,15 +19,25 @@ export function Header({ categories }: HeaderProps) {
   return (
     <header className="sticky top-0 z-40 border-b border-cream-200 bg-cream-50/85 backdrop-blur-md">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-        <button onClick={() => go('/')} className="flex items-center gap-2.5 group">
-          <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-rose-500 text-white shadow-soft transition-transform group-hover:scale-105">
-            <Sparkles className="h-5 w-5" />
-          </div>
-          <div className="text-left leading-none">
-            <span className="block font-display text-lg font-600 text-rose-900">Knitella</span>
-            <span className="block text-[11px] font-medium uppercase tracking-[0.2em] text-rose-400">Studio</span>
-          </div>
-        </button>
+<button
+  onClick={() => go('/')}
+  className="flex items-center gap-2.5 group"
+>
+  <img
+    src="https://xcc9khk9a6.ufs.sh/f/rsLPUfmJafUIrOFabkmJafUItvkPnzMmFOR5XYTdh3pK20oc"
+    alt="Knitella Studio"
+    className="h-11 w-11 object-contain transition-transform group-hover:scale-105"
+  />
+
+  <div className="leading-tight text-left">
+    <div className="font-display text-lg font-semibold text-rose-900">
+      Knitella
+    </div>
+    <div className="text-[10px] font-semibold uppercase tracking-[0.2em] text-rose-500">
+      Studio
+    </div>
+  </div>
+</button>
 
         <nav className="hidden items-center gap-1 md:flex">
           <button onClick={() => go('/shop')} className="btn-ghost">All Products</button>
