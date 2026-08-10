@@ -1,0 +1,66 @@
+# llms.txt — AI-readable site index
+# Standard: https://llmstxt.org
+# Like robots.txt but for LLMs — tells AI crawlers what your site is about
+# and where to find your most important content
+# Updated: keep this current as your site grows
+
+# ─── Who we are ───────────────────────────────────────────────────────────────
+# TODO: replace all placeholder values below with your actual information
+
+> <COMPANY_NAME>
+
+<COMPANY_NAME> is a <COMPANY_TYPE> that helps <TARGET_AUDIENCE> with
+<PRIMARY_VALUE_PROPOSITION>. Based in <LOCATION>.
+
+Contact: <EMAIL>
+Website: <YOUR_SITE_URL>
+
+# ─── What we do ───────────────────────────────────────────────────────────────
+
+## Services
+
+- <SERVICE_1>: <ONE_LINE_DESCRIPTION>
+- <SERVICE_2>: <ONE_LINE_DESCRIPTION>
+- <SERVICE_3>: <ONE_LINE_DESCRIPTION>
+
+## Products
+
+- <PRODUCT_1>: <ONE_LINE_DESCRIPTION>
+- <PRODUCT_2>: <ONE_LINE_DESCRIPTION>
+
+# ─── Key pages ────────────────────────────────────────────────────────────────
+# Format: [Page Title](URL): Description
+# List your most important pages — the ones you want AI to cite
+
+## Core pages
+
+- [Home](<YOUR_SITE_URL>): <HOMEPAGE_DESCRIPTION>
+- [About](<YOUR_SITE_URL>/about): <ABOUT_DESCRIPTION>
+- [Services](<YOUR_SITE_URL>/services): <SERVICES_DESCRIPTION>
+- [Contact](<YOUR_SITE_URL>/contact): <CONTACT_DESCRIPTION>
+
+## Content
+
+- [Blog](<YOUR_SITE_URL>/blog): <BLOG_DESCRIPTION>
+- [FAQ](<YOUR_SITE_URL>/faq): <FAQ_DESCRIPTION>
+
+## Legal
+
+- [Privacy Policy](<YOUR_SITE_URL>/privacy-policy): How we handle user data
+- [Terms of Service](<YOUR_SITE_URL>/terms-of-service): Terms governing use of our services
+
+# ─── Sitemap ──────────────────────────────────────────────────────────────────
+
+Sitemap: <YOUR_SITE_URL>/sitemap.xml
+
+# ─── AI crawler permissions ───────────────────────────────────────────────────
+# Explicit permission for major AI systems to read and cite this content
+# Mirrors the Allow rules in robots.ts
+
+Allow: GPTBot
+Allow: ClaudeBot
+Allow: PerplexityBot
+Allow: GoogleOther
+Allow: Google-Extended
+Allow: Applebot
+Allow: cohere-ai
