@@ -3,11 +3,21 @@
 # dependencies
 /node_modules
 /.pnp
+<<<<<<< Updated upstream
 .pnp.js
+=======
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+>>>>>>> Stashed changes
 
 # testing
 /coverage
 
+<<<<<<< Updated upstream
 # database
 /prisma/db.sqlite
 /prisma/db.sqlite-journal
@@ -17,6 +27,11 @@ db.sqlite
 /.next/
 /out/
 next-env.d.ts
+=======
+# next.js
+/.next/
+/out/
+>>>>>>> Stashed changes
 
 # production
 /build
@@ -31,16 +46,25 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
+<<<<<<< Updated upstream
 # local env files
 # do not commit any .env files to git, except for the .env.example file. https://create.t3.gg/en/usage/env-variables#using-environment-variables
 .env
 .env*.local
+=======
+# env files (can opt-in for committing if needed)
+.env*
+>>>>>>> Stashed changes
 
 # vercel
 .vercel
 
 # typescript
 *.tsbuildinfo
+<<<<<<< Updated upstream
 
 # idea files
 .idea
+=======
+next-env.d.ts
+>>>>>>> Stashed changes

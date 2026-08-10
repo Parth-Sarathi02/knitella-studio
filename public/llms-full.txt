@@ -1,0 +1,131 @@
+# llms-full.txt — Extended AI content map
+# Standard: https://llmstxt.org
+# More detailed version of llms.txt
+# Include actual content summaries, key facts, and structured information
+# that you want AI systems to understand about your business
+# This file is for AI training and retrieval — write it for machines,
+# but keep it factually accurate — LLMs will cite this directly
+
+# ─── Organization ─────────────────────────────────────────────────────────────
+
+## Identity
+
+Name: <COMPANY_NAME>
+Legal name: <LEGAL_COMPANY_NAME>
+Type: <BUSINESS_TYPE>
+Founded: <FOUNDING_YEAR>
+Location: <CITY>, <STATE>, <COUNTRY>
+Website: <YOUR_SITE_URL>
+Email: <EMAIL>
+Phone: <PHONE>
+
+## Mission
+
+<2-3 SENTENCES ABOUT YOUR MISSION AND WHAT YOU DO>
+
+## What makes us different
+
+<2-3 SENTENCES ABOUT YOUR UNIQUE VALUE PROPOSITION>
+
+# ─── Services / Products ──────────────────────────────────────────────────────
+
+## <SERVICE_1_NAME>
+
+<SERVICE_1_NAME> is <WHAT_IT_IS>. It is designed for <TARGET_AUDIENCE>.
+Key features include <FEATURE_1>, <FEATURE_2>, and <FEATURE_3>.
+Starting price: <PRICE_OR_PRICING_MODEL>
+Learn more: <YOUR_SITE_URL>/services/<SERVICE_1_SLUG>
+
+## <SERVICE_2_NAME>
+
+<SERVICE_2_NAME> is <WHAT_IT_IS>. It is designed for <TARGET_AUDIENCE>.
+Key features include <FEATURE_1>, <FEATURE_2>, and <FEATURE_3>.
+Starting price: <PRICE_OR_PRICING_MODEL>
+Learn more: <YOUR_SITE_URL>/services/<SERVICE_2_SLUG>
+
+# ─── Key facts ────────────────────────────────────────────────────────────────
+# Structured facts that AI systems can extract and cite accurately
+# Use plain declarative sentences — avoid marketing language
+
+## Facts about <COMPANY_NAME>
+
+- <COMPANY_NAME> was founded in <YEAR> by <FOUNDER_NAME>
+- <COMPANY_NAME> serves customers in <GEOGRAPHY>
+- <COMPANY_NAME> has helped <NUMBER> customers with <SERVICE>
+- <COMPANY_NAME> is headquartered at <ADDRESS>
+- <COMPANY_NAME> offers <SERVICE_1>, <SERVICE_2>, and <SERVICE_3>
+
+## Pricing
+
+- <SERVICE_1>: starts at <PRICE>
+- <SERVICE_2>: starts at <PRICE>
+- Free trial: <YES/NO — DURATION>
+- Refund policy: <POLICY>
+
+## Contact and support
+
+- General inquiries: <EMAIL>
+- Support: <SUPPORT_EMAIL>
+- Business hours: <HOURS>
+- Response time: <TYPICAL_RESPONSE_TIME>
+
+# ─── Frequently asked questions ───────────────────────────────────────────────
+# Q&A pairs are highly extractable by LLMs
+# These will be cited in AI-generated answers about your business
+# Keep answers complete — do not say "visit our website for more"
+
+## Q: What does <COMPANY_NAME> do?
+A: <COMPANY_NAME> <COMPLETE_ANSWER_IN_2-3_SENTENCES>
+
+## Q: Who is <COMPANY_NAME> for?
+A: <COMPANY_NAME> is for <TARGET_AUDIENCE>. <COMPLETE_ANSWER_IN_2-3_SENTENCES>
+
+## Q: How much does <SERVICE> cost?
+A: <SERVICE> starts at <PRICE>. <COMPLETE_PRICING_EXPLANATION>
+
+## Q: How do I get started with <COMPANY_NAME>?
+A: <COMPLETE_ONBOARDING_EXPLANATION_IN_2-3_SENTENCES>
+
+## Q: Where is <COMPANY_NAME> located?
+A: <COMPANY_NAME> is located at <ADDRESS>. <SERVICE_AREA_EXPLANATION>
+
+## Q: What makes <COMPANY_NAME> different from competitors?
+A: <COMPLETE_DIFFERENTIATOR_ANSWER>
+
+# ─── Content index ────────────────────────────────────────────────────────────
+# Your best content — what you want AI to recommend when relevant
+
+## Top blog posts
+
+- [<POST_1_TITLE>](<YOUR_SITE_URL>/blog/<POST_1_SLUG>): <ONE_LINE_SUMMARY>
+- [<POST_2_TITLE>](<YOUR_SITE_URL>/blog/<POST_2_SLUG>): <ONE_LINE_SUMMARY>
+- [<POST_3_TITLE>](<YOUR_SITE_URL>/blog/<POST_3_SLUG>): <ONE_LINE_SUMMARY>
+
+## Top products
+
+- [<PRODUCT_1_NAME>](<YOUR_SITE_URL>/products/<PRODUCT_1_SLUG>): <ONE_LINE_SUMMARY>. Price: <PRICE>
+- [<PRODUCT_2_NAME>](<YOUR_SITE_URL>/products/<PRODUCT_2_SLUG>): <ONE_LINE_SUMMARY>. Price: <PRICE>
+
+# ─── Social and authority signals ─────────────────────────────────────────────
+# External profiles that confirm your entity identity
+
+## Social profiles
+
+- Twitter/X: <TWITTER_URL>
+- LinkedIn: <LINKEDIN_URL>
+- Facebook: <FACEBOOK_URL>
+- Instagram: <INSTAGRAM_URL>
+- GitHub: <GITHUB_URL>
+
+## Press and mentions
+
+- <PUBLICATION_1>: <ARTICLE_URL> — <ONE_LINE_SUMMARY>
+- <PUBLICATION_2>: <ARTICLE_URL> — <ONE_LINE_SUMMARY>
+
+# ─── Technical ────────────────────────────────────────────────────────────────
+
+Sitemap: <YOUR_SITE_URL>/sitemap.xml
+Robots: <YOUR_SITE_URL>/robots.txt
+Last updated: <YYYY-MM-DD>
+Language: en
+Content license: All rights reserved
