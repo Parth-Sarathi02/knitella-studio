@@ -94,6 +94,26 @@ export default {
           '0%, 100%': { transform: 'translateY(0)' },
           '50%': { transform: 'translateY(-8px)' },
         },
+        'float-slow': {
+          '0%, 100%': { transform: 'translateY(0) rotate(-3deg)' },
+          '50%': { transform: 'translateY(-14px) rotate(3deg)' },
+        },
+        wiggle: {
+          '0%, 100%': { transform: 'rotate(-4deg)' },
+          '50%': { transform: 'rotate(4deg)' },
+        },
+        marquee: {
+          '0%': { transform: 'translateX(0)' },
+          '100%': { transform: 'translateX(-50%)' },
+        },
+        'spin-slow': {
+          '0%': { transform: 'rotate(0deg)' },
+          '100%': { transform: 'rotate(360deg)' },
+        },
+        shimmer: {
+          '0%': { backgroundPosition: '-200% 0' },
+          '100%': { backgroundPosition: '200% 0' },
+        },
       },
       animation: {
         'fade-up': 'fade-up 0.5s ease-out both',
@@ -101,6 +121,11 @@ export default {
         'scale-in': 'scale-in 0.3s ease-out both',
         'slide-in-right': 'slide-in-right 0.35s cubic-bezier(0.16, 1, 0.3, 1) both',
         float: 'float 4s ease-in-out infinite',
+        'float-slow': 'float-slow 7s ease-in-out infinite',
+        wiggle: 'wiggle 0.4s ease-in-out',
+        marquee: 'marquee 28s linear infinite',
+        'spin-slow': 'spin-slow 16s linear infinite',
+        shimmer: 'shimmer 2.5s linear infinite',
       },
     },
   },
