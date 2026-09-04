@@ -1,5 +1,7 @@
-import { Sparkles, Instagram, Mail, Heart } from 'lucide-react';
+import { Sparkles, Instagram, Heart } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { navigate } from '@/lib/router';
+import { WireDivider } from '@/components/WireSquiggle';
 
 interface FooterProps {
   categories: { slug: string; name: string }[];
@@ -8,6 +10,7 @@ interface FooterProps {
 export function Footer({ categories }: FooterProps) {
   return (
     <footer className="mt-20 border-t border-cream-200 bg-cream-100">
+      <WireDivider color="#e0c79e" className="max-w-7xl mx-auto -translate-y-1/2" />
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         <div className="grid gap-10 md:grid-cols-4">
           <div className="md:col-span-2">
@@ -23,18 +26,19 @@ export function Footer({ categories }: FooterProps) {
             <p className="mt-4 max-w-sm text-sm leading-relaxed text-rose-700/80">
               Handmade pipe cleaner magic — crafted with love, one twist at a time. Every piece is unique, just like the person receiving it.
             </p>
-<div className="mt-5 flex gap-3">
-  <a
-    href="https://www.instagram.com/knitella.studio/"
-    target="_blank"
-    rel="noopener noreferrer"
-    className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-rose-600 shadow-soft transition-all hover:bg-rose-50 hover:text-rose-700"
-    aria-label="Instagram"
-  >
-    <Instagram className="h-4.5 w-4.5" />
-  </a>
-
-</div>
+            <div className="mt-5 flex gap-3">
+              <motion.a
+                href="https://www.instagram.com/knitella.studio/"
+                target="_blank"
+                rel="noopener noreferrer"
+                whileHover={{ rotate: [0, -10, 10, -6, 0], scale: 1.08 }}
+                transition={{ duration: 0.5 }}
+                className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-rose-600 shadow-soft transition-colors hover:bg-rose-50 hover:text-rose-700"
+                aria-label="Instagram"
+              >
+                <Instagram className="h-4.5 w-4.5" />
+              </motion.a>
+            </div>
           </div>
 
           <div>

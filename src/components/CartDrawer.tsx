@@ -1,4 +1,5 @@
 import { X, ShoppingBag, Plus, Minus, Trash2 } from 'lucide-react';
+import { AnimatePresence, motion } from 'framer-motion';
 import { useCart } from '@/lib/cart-context';
 import { formatPrice } from '@/lib/format';
 
@@ -10,18 +11,23 @@ export function CartDrawer({ onCheckout }: CartDrawerProps) {
   const { isOpen, closeCart, items, updateQuantity, removeItem, totalAmount, totalItems } = useCart();
 
   return (
-    <>
+    <AnimatePresence>
       {isOpen && (
-        <div
-          className="fixed inset-0 z-50 bg-rose-900/30 backdrop-blur-sm animate-fade-in"
-          onClick={closeCart}
-        />
-      )}
-      <div
-        className={`fixed right-0 top-0 z-50 flex h-full w-full max-w-md flex-col bg-cream-50 shadow-float transition-transform duration-300 ${
-          isOpen ? 'translate-x-0' : 'translate-x-full'
-        }`}
-      >
+        <>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 bg-rose-900/30 backdrop-blur-sm"
+            onClick={closeCart}
+          />
+          <motion.div
+            initial={{ x: '100%' }}
+            animate={{ x: 0 }}
+            exit={{ x: '100%' }}
+            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+            className="fixed right-0 top-0 z-50 flex h-full w-full max-w-md flex-col bg-cream-50 shadow-float"
+          >
         <div className="flex items-center justify-between border-b border-cream-200 px-5 py-4">
           <div className="flex items-center gap-2">
             <ShoppingBag className="h-5 w-5 text-rose-600" />
@@ -51,8 +57,17 @@ export function CartDrawer({ onCheckout }: CartDrawerProps) {
           <>
             <div className="flex-1 overflow-y-auto px-5 py-4">
               <div className="space-y-4">
+                <AnimatePresence initial={false}>
                 {items.map((item) => (
-                  <div key={item.product.id} className="flex gap-3 rounded-2xl bg-white p-3 shadow-soft">
+                  <motion.div
+                    key={item.product.id}
+                    layout
+                    initial={{ opacity: 0, y: -12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, x: 40, height: 0, marginBottom: 0, paddingTop: 0, paddingBottom: 0 }}
+                    transition={{ duration: 0.25 }}
+                    className="flex gap-3 rounded-2xl bg-white p-3 shadow-soft"
+                  >
                     <div className="h-20 w-20 flex-shrink-0 overflow-hidden rounded-xl bg-cream-100">
                       {item.product.image_url && (
                         <img src={item.product.image_url} alt={item.product.name} className="h-full w-full object-cover" />
@@ -93,8 +108,9 @@ export function CartDrawer({ onCheckout }: CartDrawerProps) {
                         </p>
                       </div>
                     </div>
-                  </div>
+                  </motion.div>
                 ))}
+                </AnimatePresence>
               </div>
             </div>
 
@@ -110,7 +126,9 @@ export function CartDrawer({ onCheckout }: CartDrawerProps) {
             </div>
           </>
         )}
-      </div>
-    </>
+          </motion.div>
+        </>
+      )}
+    </AnimatePresence>
   );
 }

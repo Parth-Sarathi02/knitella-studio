@@ -1,9 +1,12 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { ArrowLeft, Plus, Minus, ShoppingBag, Check, Heart, Truck, Shield, Sparkles } from 'lucide-react';
+import { motion, useMotionValue, useSpring, useTransform, AnimatePresence } from 'framer-motion';
 import type { Product, Category } from '@/lib/types';
 import { formatPrice } from '@/lib/format';
 import { useCart } from '@/lib/cart-context';
 import { navigate } from '@/lib/router';
+import { Reveal } from '@/components/Reveal';
+import { WireSquiggle } from '@/components/WireSquiggle';
 
 interface ProductPageProps {
   product: Product;
@@ -15,6 +18,19 @@ export function ProductPage({ product, category, relatedProducts }: ProductPageP
   const { addItem, openCart } = useCart();
   const [quantity, setQuantity] = useState(1);
   const [added, setAdded] = useState(false);
+  const imgRef = useRef<HTMLDivElement>(null);
+
+  const mx = useMotionValue(0.5);
+  const my = useMotionValue(0.5);
+  const rotateX = useSpring(useTransform(my, [0, 1], [4, -4]), { stiffness: 200, damping: 20 });
+  const rotateY = useSpring(useTransform(mx, [0, 1], [-4, 4]), { stiffness: 200, damping: 20 });
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    const rect = imgRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    mx.set((e.clientX - rect.left) / rect.width);
+    my.set((e.clientY - rect.top) / rect.height);
+  };
 
   const handleAdd = () => {
     addItem(product, quantity);
@@ -29,30 +45,51 @@ export function ProductPage({ product, category, relatedProducts }: ProductPageP
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-      <button
+      <motion.button
         onClick={() => navigate('/shop')}
+        whileHover={{ x: -3 }}
         className="inline-flex items-center gap-1.5 text-sm font-medium text-rose-600 transition-colors hover:text-rose-800"
       >
         <ArrowLeft className="h-4 w-4" />
         Back to Shop
-      </button>
+      </motion.button>
 
       <div className="mt-6 grid gap-10 lg:grid-cols-2">
         {/* Image */}
-        <div className="animate-fade-up">
-          <div className="card overflow-hidden">
-            <div className="aspect-square bg-cream-100">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          style={{ perspective: 1000 }}
+        >
+          <motion.div
+            ref={imgRef}
+            onMouseMove={handleMouseMove}
+            onMouseLeave={() => {
+              mx.set(0.5);
+              my.set(0.5);
+            }}
+            style={{ rotateX, rotateY }}
+            className="card overflow-hidden"
+          >
+            <div className="aspect-square overflow-hidden bg-cream-100">
               {product.image_url ? (
-                <img src={product.image_url} alt={product.name} className="h-full w-full object-cover" />
+                <motion.img
+                  src={product.image_url}
+                  alt={product.name}
+                  className="h-full w-full object-cover"
+                  whileHover={{ scale: 1.06 }}
+                  transition={{ duration: 0.4 }}
+                />
               ) : (
                 <div className="flex h-full w-full items-center justify-center text-rose-200">No image</div>
               )}
             </div>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
 
         {/* Details */}
-        <div className="animate-fade-up" style={{ animationDelay: '100ms' }}>
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.1 }}>
           {category && (
             <button
               onClick={() => navigate(`/shop/${category.slug}`)}
@@ -61,8 +98,11 @@ export function ProductPage({ product, category, relatedProducts }: ProductPageP
               {category.name}
             </button>
           )}
-          <h1 className="mt-3 font-display text-3xl font-700 text-rose-900 sm:text-4xl">{product.name}</h1>
-          <p className="mt-2 font-display text-3xl font-700 text-rose-700">{formatPrice(product.price)}</p>
+          <h1 className="relative mt-3 inline-block font-display text-3xl font-700 text-rose-900 sm:text-4xl">
+            {product.name}
+            <WireSquiggle className="absolute -bottom-2 left-0 h-3 w-2/3 text-rose-300" color="#f0a7ba" />
+          </h1>
+          <p className="mt-5 font-display text-3xl font-700 text-rose-700">{formatPrice(product.price)}</p>
           <p className="mt-4 leading-relaxed text-rose-700/80">{product.description}</p>
 
           {/* Quantity selector */}
@@ -76,7 +116,18 @@ export function ProductPage({ product, category, relatedProducts }: ProductPageP
               >
                 <Minus className="h-4 w-4" />
               </button>
-              <span className="w-10 text-center font-display text-lg font-600 text-rose-900">{quantity}</span>
+              <AnimatePresence mode="wait" initial={false}>
+                <motion.span
+                  key={quantity}
+                  initial={{ opacity: 0, y: -6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 6 }}
+                  transition={{ duration: 0.15 }}
+                  className="inline-block w-10 text-center font-display text-lg font-600 text-rose-900"
+                >
+                  {quantity}
+                </motion.span>
+              </AnimatePresence>
               <button
                 onClick={() => setQuantity(quantity + 1)}
                 className="flex h-9 w-9 items-center justify-center rounded-full text-rose-600 transition-colors hover:bg-rose-100"
@@ -89,23 +140,25 @@ export function ProductPage({ product, category, relatedProducts }: ProductPageP
 
           {/* Actions */}
           <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-            <button onClick={handleBuyNow} className="btn-primary flex-1">
+            <motion.button whileTap={{ scale: 0.97 }} onClick={handleBuyNow} className="btn-primary flex-1">
               <ShoppingBag className="h-4 w-4" />
               Order Now
-            </button>
-            <button onClick={handleAdd} className="btn-secondary flex-1">
-              {added ? (
-                <>
-                  <Check className="h-4 w-4 text-sage-600" />
-                  Added!
-                </>
-              ) : (
-                <>
-                  <Plus className="h-4 w-4" />
-                  Add to Cart
-                </>
-              )}
-            </button>
+            </motion.button>
+            <motion.button whileTap={{ scale: 0.97 }} onClick={handleAdd} className="btn-secondary flex-1">
+              <AnimatePresence mode="wait" initial={false}>
+                {added ? (
+                  <motion.span key="added" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex items-center gap-2">
+                    <Check className="h-4 w-4 text-sage-600" />
+                    Added!
+                  </motion.span>
+                ) : (
+                  <motion.span key="add" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex items-center gap-2">
+                    <Plus className="h-4 w-4" />
+                    Add to Cart
+                  </motion.span>
+                )}
+              </AnimatePresence>
+            </motion.button>
           </div>
 
           {/* Trust badges */}
@@ -122,13 +175,15 @@ export function ProductPage({ product, category, relatedProducts }: ProductPageP
               </div>
             ))}
           </div>
-        </div>
+        </motion.div>
       </div>
 
       {/* Related products */}
       {relatedProducts.length > 0 && (
         <section className="mt-20">
-          <h2 className="font-display text-2xl font-700 text-rose-900">You might also like</h2>
+          <Reveal>
+            <h2 className="font-display text-2xl font-700 text-rose-900">You might also like</h2>
+          </Reveal>
           <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {relatedProducts.map((p, i) => (
               <ProductCardMini key={p.id} product={p} index={i} />
@@ -142,22 +197,34 @@ export function ProductPage({ product, category, relatedProducts }: ProductPageP
 
 function ProductCardMini({ product, index }: { product: Product; index: number }) {
   return (
-    <div
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.3 }}
+      transition={{ duration: 0.4, delay: index * 0.07 }}
+      whileHover={{ y: -6 }}
+      whileTap={{ scale: 0.97 }}
       onClick={() => navigate(`/product/${product.id}`)}
-      className="group cursor-pointer animate-fade-up"
-      style={{ animationDelay: `${index * 60}ms` }}
+      className="group h-full cursor-pointer"
     >
-      <div className="card overflow-hidden transition-all duration-300 hover:shadow-float hover:-translate-y-1">
+      <div className="card flex h-full flex-col overflow-hidden shadow-card transition-shadow duration-300 hover:shadow-float">
         <div className="relative aspect-square overflow-hidden bg-cream-100">
           {product.image_url && (
-            <img src={product.image_url} alt={product.name} loading="lazy" className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+            <img
+              src={product.image_url}
+              alt={product.name}
+              loading="lazy"
+              className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+            />
           )}
         </div>
-        <div className="p-4">
-          <h3 className="font-display text-sm font-600 text-rose-900 leading-snug">{product.name}</h3>
-          <p className="mt-1.5 font-display text-base font-700 text-rose-700">{formatPrice(product.price)}</p>
+        <div className="flex flex-1 flex-col p-4">
+          <h3 className="line-clamp-2 min-h-[2.5rem] font-display text-sm font-600 leading-snug text-rose-900">
+            {product.name}
+          </h3>
+          <p className="mt-auto pt-1.5 font-display text-base font-700 text-rose-700">{formatPrice(product.price)}</p>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }

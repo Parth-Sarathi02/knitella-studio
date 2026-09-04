@@ -1,6 +1,10 @@
 import { useMemo } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { PackageSearch } from 'lucide-react';
 import type { Category, Product } from '@/lib/types';
 import { ProductCard } from '@/components/ProductCard';
+import { Reveal } from '@/components/Reveal';
+import { navigate } from '@/lib/router';
 
 interface ShopPageProps {
   categories: Category[];
@@ -20,55 +24,94 @@ export function ShopPage({ categories, products, activeCategory }: ShopPageProps
 
   const currentCategory = categories.find((c) => c.slug === activeCategory);
   const title = currentCategory ? currentCategory.name : 'All Products';
-  const description = currentCategory ? currentCategory.description : 'Browse our full collection of handmade pipe cleaner creations.';
+  const description = currentCategory
+    ? currentCategory.description
+    : 'Browse our full collection of handmade pipe cleaner creations.';
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-      <div className="text-center">
+      <Reveal className="text-center" key={title}>
         <h1 className="font-display text-4xl font-700 text-rose-900 sm:text-5xl">{title}</h1>
         <p className="mx-auto mt-3 max-w-lg text-rose-600/70">{description}</p>
-      </div>
+      </Reveal>
 
       {/* Category pills */}
       <div className="mt-8 flex flex-wrap justify-center gap-2">
-        <a
-          href="#/shop"
-          className={`chip border transition-all ${
-            !activeCategory
-              ? 'border-rose-500 bg-rose-500 text-white'
-              : 'border-cream-300 bg-white text-rose-700 hover:border-rose-300'
-          }`}
-        >
+        <PillLink href="#/shop" active={!activeCategory} onClick={() => navigate('/shop')}>
           All Products
-        </a>
+        </PillLink>
         {sortedCategories.map((cat) => (
-          <a
+          <PillLink
             key={cat.id}
             href={`#/shop/${cat.slug}`}
-            className={`chip border transition-all ${
-              activeCategory === cat.slug
-                ? 'border-rose-500 bg-rose-500 text-white'
-                : 'border-cream-300 bg-white text-rose-700 hover:border-rose-300'
-            }`}
+            active={activeCategory === cat.slug}
+            onClick={() => navigate(`/shop/${cat.slug}`)}
           >
             {cat.name}
-          </a>
+          </PillLink>
         ))}
       </div>
 
       {/* Product grid */}
-      {filtered.length === 0 ? (
-        <div className="mt-16 flex flex-col items-center text-center">
-          <p className="font-display text-xl font-600 text-rose-800">No products found</p>
-          <p className="mt-1 text-sm text-rose-500/70">Check back soon — we're always crafting new pieces.</p>
-        </div>
-      ) : (
-        <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {filtered.map((product, i) => (
-            <ProductCard key={product.id} product={product} index={i} />
-          ))}
-        </div>
-      )}
+      <AnimatePresence mode="wait">
+        {filtered.length === 0 ? (
+          <motion.div
+            key="empty"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="mt-16 flex flex-col items-center text-center"
+          >
+            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-cream-100 text-rose-300">
+              <PackageSearch className="h-7 w-7" />
+            </div>
+            <p className="mt-4 font-display text-xl font-600 text-rose-800">No products found</p>
+            <p className="mt-1 text-sm text-rose-500/70">Check back soon — we're always crafting new pieces.</p>
+          </motion.div>
+        ) : (
+          <motion.div
+            key={activeCategory ?? 'all'}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+          >
+            {filtered.map((product, i) => (
+              <ProductCard key={product.id} product={product} index={i} />
+            ))}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
+  );
+}
+
+function PillLink({
+  href,
+  active,
+  onClick,
+  children,
+}: {
+  href: string;
+  active: boolean;
+  onClick: () => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <motion.a
+      href={href}
+      onClick={(e) => {
+        e.preventDefault();
+        onClick();
+      }}
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.96 }}
+      className={`chip border transition-colors ${
+        active ? 'border-rose-500 bg-rose-500 text-white' : 'border-cream-300 bg-white text-rose-700 hover:border-rose-300'
+      }`}
+    >
+      {children}
+    </motion.a>
   );
 }

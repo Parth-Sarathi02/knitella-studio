@@ -8,9 +8,27 @@
   }
   body {
     @apply bg-cream-50 text-rose-900 font-sans antialiased;
+    background-image: radial-gradient(rgba(110, 40, 61, 0.05) 1px, transparent 1px);
+    background-size: 22px 22px;
   }
   ::selection {
     @apply bg-rose-200 text-rose-900;
+  }
+  :focus-visible {
+    outline: 2px solid theme('colors.rose.400');
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
   }
 }
 
@@ -32,6 +50,24 @@
   }
   .chip {
     @apply inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium;
+  }
+  .wire-frame {
+    position: relative;
+  }
+  .wire-frame::after {
+    content: '';
+    position: absolute;
+    inset: -6px;
+    border-radius: inherit;
+    border: 2.5px dashed currentColor;
+    opacity: 0;
+    transform: scale(0.97);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    pointer-events: none;
+  }
+  .wire-frame:hover::after {
+    opacity: 0.35;
+    transform: scale(1);
   }
 }
 

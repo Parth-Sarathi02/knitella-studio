@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { X, CheckCircle2, Loader2, ShoppingBag } from 'lucide-react';
+import { AnimatePresence, motion } from 'framer-motion';
 import { useCart } from '@/lib/cart-context';
 import { supabase } from '@/lib/supabase';
 import { formatPrice } from '@/lib/format';
@@ -12,7 +13,7 @@ interface CheckoutModalProps {
 type Step = 'form' | 'submitting' | 'success' | 'error';
 
 export function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
-  const { items, totalAmount, clearCart, closeCart } = useCart();
+  const { items, totalAmount, clearCart } = useCart();
   const [step, setStep] = useState<Step>('form');
   const [errorMsg, setErrorMsg] = useState('');
   const [form, setForm] = useState({
@@ -22,8 +23,6 @@ export function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
     delivery_address: '',
     notes: '',
   });
-
-  if (!isOpen) return null;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -76,10 +75,24 @@ export function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
   };
 
   return (
-    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-rose-900/40 backdrop-blur-sm animate-fade-in" onClick={handleClose} />
+    <AnimatePresence>
+      {isOpen && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="absolute inset-0 bg-rose-900/40 backdrop-blur-sm"
+            onClick={handleClose}
+          />
 
-      <div className="relative z-10 w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-4xl bg-cream-50 shadow-float animate-scale-in">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.94, y: 12 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.96, y: 8 }}
+            transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+            className="relative z-10 w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-4xl bg-cream-50 shadow-float"
+          >
         <button
           onClick={handleClose}
           className="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full text-rose-400 transition-colors hover:bg-rose-100"
@@ -210,7 +223,9 @@ export function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
             </form>
           </div>
         )}
-      </div>
-    </div>
+          </motion.div>
+        </div>
+      )}
+    </AnimatePresence>
   );
 }
