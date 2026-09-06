@@ -1,8 +1,10 @@
+'use client';
+
 import { useState } from 'react';
 import { X, CheckCircle2, Loader2, ShoppingBag } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useCart } from '@/lib/cart-context';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/lib/supabase/client';
 import { formatPrice } from '@/lib/format';
 
 interface CheckoutModalProps {
@@ -106,9 +108,9 @@ export function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
             <div className="flex h-20 w-20 items-center justify-center rounded-full bg-sage-100 text-sage-600 animate-scale-in">
               <CheckCircle2 className="h-10 w-10" />
             </div>
-            <h2 className="mt-5 font-display text-2xl font-700 text-rose-900">Order Request Received!</h2>
+            <h2 className="mt-5 font-display text-2xl font-bold text-rose-900">Order Request Received!</h2>
             <p className="mt-2 max-w-sm text-sm leading-relaxed text-rose-600/80">
-              Thank you, {form.customer_name.split(' ')[0]}! We've received your order request. Knitella Studio will contact you shortly to confirm the details and arrange payment.
+              Thank you, {form.customer_name.split(' ')[0]}! We&apos;ve received your order request. Knitella Studio will contact you shortly to confirm the details and arrange payment.
             </p>
             <div className="mt-6 w-full rounded-2xl bg-white p-4 text-left shadow-soft">
               <p className="text-xs font-medium uppercase tracking-wider text-rose-400">What happens next</p>
@@ -124,10 +126,10 @@ export function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
           <div className="p-6">
             <div className="flex items-center gap-2">
               <ShoppingBag className="h-5 w-5 text-rose-600" />
-              <h2 className="font-display text-xl font-700 text-rose-900">Place Order Request</h2>
+              <h2 className="font-display text-xl font-bold text-rose-900">Place Order Request</h2>
             </div>
             <p className="mt-1 text-sm text-rose-500/70">
-              No online payment needed — fill in your details and we'll contact you to confirm.
+              No online payment needed — fill in your details and we&apos;ll contact you to confirm.
             </p>
 
             <div className="mt-5 rounded-2xl bg-white p-4 shadow-soft">
@@ -141,8 +143,8 @@ export function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
                 ))}
               </div>
               <div className="mt-3 flex justify-between border-t border-cream-200 pt-3">
-                <span className="font-display font-600 text-rose-900">Total</span>
-                <span className="font-display text-lg font-700 text-rose-700">{formatPrice(totalAmount)}</span>
+                <span className="font-display font-semibold text-rose-900">Total</span>
+                <span className="font-display text-lg font-bold text-rose-700">{formatPrice(totalAmount)}</span>
               </div>
             </div>
 

@@ -1,3 +1,5 @@
+'use client';
+
 import { X, ShoppingBag, Plus, Minus, Trash2 } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useCart } from '@/lib/cart-context';
@@ -31,7 +33,7 @@ export function CartDrawer({ onCheckout }: CartDrawerProps) {
         <div className="flex items-center justify-between border-b border-cream-200 px-5 py-4">
           <div className="flex items-center gap-2">
             <ShoppingBag className="h-5 w-5 text-rose-600" />
-            <h2 className="font-display text-lg font-600 text-rose-900">
+            <h2 className="font-display text-lg font-semibold text-rose-900">
               Your Cart {totalItems > 0 && `(${totalItems})`}
             </h2>
           </div>
@@ -49,7 +51,7 @@ export function CartDrawer({ onCheckout }: CartDrawerProps) {
             <div className="flex h-20 w-20 items-center justify-center rounded-full bg-cream-100 text-rose-300">
               <ShoppingBag className="h-8 w-8" />
             </div>
-            <p className="mt-4 font-display text-lg font-600 text-rose-800">Your cart is empty</p>
+            <p className="mt-4 font-display text-lg font-semibold text-rose-800">Your cart is empty</p>
             <p className="mt-1 text-sm text-rose-500/70">Add some handmade magic to get started.</p>
             <button onClick={closeCart} className="btn-primary mt-6">Browse Products</button>
           </div>
@@ -75,7 +77,7 @@ export function CartDrawer({ onCheckout }: CartDrawerProps) {
                     </div>
                     <div className="flex flex-1 flex-col">
                       <div className="flex items-start justify-between gap-2">
-                        <h3 className="font-display text-sm font-600 leading-snug text-rose-900">{item.product.name}</h3>
+                        <h3 className="font-display text-sm font-semibold leading-snug text-rose-900">{item.product.name}</h3>
                         <button
                           onClick={() => removeItem(item.product.id)}
                           className="flex-shrink-0 text-rose-300 transition-colors hover:text-rose-500"
@@ -94,7 +96,7 @@ export function CartDrawer({ onCheckout }: CartDrawerProps) {
                           >
                             <Minus className="h-3.5 w-3.5" />
                           </button>
-                          <span className="w-6 text-center text-sm font-600 text-rose-900">{item.quantity}</span>
+                          <span className="w-6 text-center text-sm font-semibold text-rose-900">{item.quantity}</span>
                           <button
                             onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
                             className="flex h-7 w-7 items-center justify-center rounded-full text-rose-600 transition-colors hover:bg-rose-100"
@@ -103,7 +105,7 @@ export function CartDrawer({ onCheckout }: CartDrawerProps) {
                             <Plus className="h-3.5 w-3.5" />
                           </button>
                         </div>
-                        <p className="font-display text-sm font-700 text-rose-700">
+                        <p className="font-display text-sm font-bold text-rose-700">
                           {formatPrice(item.product.price * item.quantity)}
                         </p>
                       </div>
@@ -117,9 +119,9 @@ export function CartDrawer({ onCheckout }: CartDrawerProps) {
             <div className="border-t border-cream-200 bg-white px-5 py-4">
               <div className="flex items-center justify-between">
                 <span className="text-sm font-medium text-rose-600">Total</span>
-                <span className="font-display text-2xl font-700 text-rose-900">{formatPrice(totalAmount)}</span>
+                <span className="font-display text-2xl font-bold text-rose-900">{formatPrice(totalAmount)}</span>
               </div>
-              <p className="mt-1 text-xs text-rose-400">No online payment — we'll contact you to confirm your order.</p>
+              <p className="mt-1 text-xs text-rose-400">No online payment — we&apos;ll contact you to confirm your order.</p>
               <button onClick={onCheckout} className="btn-primary mt-4 w-full">
                 Place Order Request
               </button>

@@ -1,8 +1,10 @@
+'use client';
+
 import { ShoppingBag, Menu, X } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useCart } from '@/lib/cart-context';
-import { navigate } from '@/lib/router';
 
 interface HeaderProps {
   categories: { slug: string; name: string }[];
@@ -20,11 +22,6 @@ export function Header({ categories }: HeaderProps) {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  const go = (path: string) => {
-    navigate(path);
-    setMobileOpen(false);
-  };
-
   return (
     <header
       className={`sticky top-0 z-40 border-b transition-all duration-300 ${
@@ -38,7 +35,7 @@ export function Header({ categories }: HeaderProps) {
           scrolled ? 'py-3' : 'py-4'
         }`}
       >
-        <button onClick={() => go('/')} className="group flex items-center gap-2.5">
+        <Link href="/" className="group flex items-center gap-2.5">
           <motion.img
             src="https://xcc9khk9a6.ufs.sh/f/rsLPUfmJafUIrOFabkmJafUItvkPnzMmFOR5XYTdh3pK20oc"
             alt="Knitella Studio"
@@ -50,12 +47,12 @@ export function Header({ categories }: HeaderProps) {
             <div className="font-display text-lg font-semibold text-rose-900">Knitella</div>
             <div className="text-[10px] font-semibold uppercase tracking-[0.2em] text-rose-500">Studio</div>
           </div>
-        </button>
+        </Link>
 
         <nav className="hidden items-center gap-1 md:flex">
-          <NavLink onClick={() => go('/shop')} label="All Products" />
+          <NavLink href="/shop" label="All Products" />
           {categories.map((c) => (
-            <NavLink key={c.slug} onClick={() => go(`/shop/${c.slug}`)} label={c.name} />
+            <NavLink key={c.slug} href={`/shop/${c.slug}`} label={c.name} />
           ))}
         </nav>
 
@@ -102,13 +99,18 @@ export function Header({ categories }: HeaderProps) {
             className="overflow-hidden border-t border-cream-200 bg-cream-50 md:hidden"
           >
             <nav className="flex flex-col gap-1 px-4 py-3">
-              <button onClick={() => go('/shop')} className="btn-ghost justify-start">
+              <Link href="/shop" onClick={() => setMobileOpen(false)} className="btn-ghost justify-start">
                 All Products
-              </button>
+              </Link>
               {categories.map((c) => (
-                <button key={c.slug} onClick={() => go(`/shop/${c.slug}`)} className="btn-ghost justify-start">
+                <Link
+                  key={c.slug}
+                  href={`/shop/${c.slug}`}
+                  onClick={() => setMobileOpen(false)}
+                  className="btn-ghost justify-start"
+                >
                   {c.name}
-                </button>
+                </Link>
               ))}
             </nav>
           </motion.div>
@@ -118,11 +120,11 @@ export function Header({ categories }: HeaderProps) {
   );
 }
 
-function NavLink({ label, onClick }: { label: string; onClick: () => void }) {
+function NavLink({ label, href }: { label: string; href: string }) {
   return (
-    <button onClick={onClick} className="group relative px-4 py-2 text-sm font-medium text-rose-700 transition-colors hover:text-rose-900">
+    <Link href={href} className="group relative px-4 py-2 text-sm font-medium text-rose-700 transition-colors hover:text-rose-900">
       {label}
       <span className="absolute inset-x-4 -bottom-0.5 h-0.5 origin-left scale-x-0 rounded-full bg-rose-400 transition-transform duration-300 group-hover:scale-x-100" />
-    </button>
+    </Link>
   );
 }

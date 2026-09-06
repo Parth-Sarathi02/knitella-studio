@@ -1,16 +1,19 @@
+'use client';
+
 import { useState, useEffect, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
 import { LayoutDashboard, Package, Tag, LogOut, Sparkles, Plus, X, Edit3, Trash2, ChevronRight, Phone, Mail, MapPin, ShoppingBag, TrendingUp, Clock } from 'lucide-react';
 import { useAuth } from '@/lib/auth-context';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/lib/supabase/client';
 import { formatPrice, formatDateTime, slugify } from '@/lib/format';
 import type { Category, Product, Order, OrderStatus } from '@/lib/types';
 import { ORDER_STATUS_LABELS, ORDER_STATUS_COLORS } from '@/lib/types';
-import { navigate } from '@/lib/router';
 
 type Tab = 'dashboard' | 'orders' | 'products' | 'categories';
 
 export function AdminDashboard() {
   const { signOut } = useAuth();
+  const router = useRouter();
   const [tab, setTab] = useState<Tab>('dashboard');
   const [categories, setCategories] = useState<Category[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
@@ -31,6 +34,7 @@ export function AdminDashboard() {
   }, []);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- intentional: fetch-on-mount data load
     loadData();
   }, [loadData]);
 
@@ -43,7 +47,7 @@ export function AdminDashboard() {
 
   const handleSignOut = async () => {
     await signOut();
-    navigate('/');
+    router.push('/');
   };
 
   return (
@@ -51,17 +55,17 @@ export function AdminDashboard() {
       {/* Top bar */}
       <div className="border-b border-cream-200 bg-white">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
-          <button onClick={() => navigate('/')} className="flex items-center gap-2.5">
+          <button onClick={() => router.push('/')} className="flex items-center gap-2.5">
             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-rose-500 text-white">
               <Sparkles className="h-4.5 w-4.5" />
             </div>
             <div className="leading-none">
-              <span className="block font-display text-sm font-600 text-rose-900">Knitella Studio</span>
+              <span className="block font-display text-sm font-semibold text-rose-900">Knitella Studio</span>
               <span className="block text-[10px] uppercase tracking-wider text-rose-400">Admin</span>
             </div>
           </button>
           <div className="flex items-center gap-2">
-            <button onClick={() => navigate('/')} className="btn-ghost text-sm">View Store</button>
+            <button onClick={() => router.push('/')} className="btn-ghost text-sm">View Store</button>
             <button onClick={handleSignOut} className="btn-ghost text-sm text-rose-600">
               <LogOut className="h-4 w-4" />
               Sign Out
@@ -134,7 +138,7 @@ function DashboardTab({ stats, orders, products, categories, setTab }: {
             <div className={`flex h-10 w-10 items-center justify-center rounded-xl ${s.color}`}>
               <s.icon className="h-5 w-5" />
             </div>
-            <p className="mt-3 font-display text-2xl font-700 text-rose-900">{s.value}</p>
+            <p className="mt-3 font-display text-2xl font-bold text-rose-900">{s.value}</p>
             <p className="text-xs uppercase tracking-wider text-rose-400">{s.label}</p>
           </div>
         ))}
@@ -142,7 +146,7 @@ function DashboardTab({ stats, orders, products, categories, setTab }: {
 
       <div className="card p-6">
         <div className="flex items-center justify-between">
-          <h2 className="font-display text-lg font-600 text-rose-900">Recent Orders</h2>
+          <h2 className="font-display text-lg font-semibold text-rose-900">Recent Orders</h2>
           <button onClick={() => setTab('orders')} className="text-sm font-medium text-rose-600 hover:text-rose-800 flex items-center gap-1">
             View all <ChevronRight className="h-4 w-4" />
           </button>
@@ -154,12 +158,12 @@ function DashboardTab({ stats, orders, products, categories, setTab }: {
             {recentOrders.map((order) => (
               <div key={order.id} className="flex items-center justify-between rounded-xl bg-cream-50 px-4 py-3">
                 <div>
-                  <p className="text-sm font-600 text-rose-900">{order.customer_name}</p>
+                  <p className="text-sm font-semibold text-rose-900">{order.customer_name}</p>
                   <p className="text-xs text-rose-400">{formatDateTime(order.created_at)}</p>
                 </div>
                 <div className="flex items-center gap-3">
                   <span className={`chip ${ORDER_STATUS_COLORS[order.status]}`}>{ORDER_STATUS_LABELS[order.status]}</span>
-                  <span className="text-sm font-700 text-rose-900">{formatPrice(Number(order.total))}</span>
+                  <span className="text-sm font-bold text-rose-900">{formatPrice(Number(order.total))}</span>
                 </div>
               </div>
             ))}
@@ -169,7 +173,7 @@ function DashboardTab({ stats, orders, products, categories, setTab }: {
 
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="card p-6">
-          <h2 className="font-display text-lg font-600 text-rose-900">Quick Actions</h2>
+          <h2 className="font-display text-lg font-semibold text-rose-900">Quick Actions</h2>
           <div className="mt-4 space-y-2">
             <button onClick={() => setTab('products')} className="flex w-full items-center gap-3 rounded-xl bg-cream-50 px-4 py-3 text-sm font-medium text-rose-700 transition-colors hover:bg-rose-50">
               <Plus className="h-4 w-4" /> Add a new product
@@ -180,7 +184,7 @@ function DashboardTab({ stats, orders, products, categories, setTab }: {
           </div>
         </div>
         <div className="card p-6">
-          <h2 className="font-display text-lg font-600 text-rose-900">Store Overview</h2>
+          <h2 className="font-display text-lg font-semibold text-rose-900">Store Overview</h2>
           <div className="mt-4 space-y-2">
             {categories.map((cat) => {
               const count = products.filter((p) => p.category_id === cat.id).length;
@@ -231,7 +235,7 @@ function OrdersTab({ orders, onUpdate }: { orders: Order[]; onUpdate: () => void
       {filtered.length === 0 ? (
         <div className="mt-10 card p-10 text-center">
           <ShoppingBag className="mx-auto h-10 w-10 text-rose-200" />
-          <p className="mt-3 font-display text-lg font-600 text-rose-800">No orders here</p>
+          <p className="mt-3 font-display text-lg font-semibold text-rose-800">No orders here</p>
           <p className="text-sm text-rose-400">New order requests will appear here.</p>
         </div>
       ) : (
@@ -247,13 +251,13 @@ function OrdersTab({ orders, onUpdate }: { orders: Order[]; onUpdate: () => void
                     <ShoppingBag className="h-5 w-5" />
                   </div>
                   <div>
-                    <p className="font-display text-sm font-600 text-rose-900">{order.customer_name}</p>
+                    <p className="font-display text-sm font-semibold text-rose-900">{order.customer_name}</p>
                     <p className="text-xs text-rose-400">{formatDateTime(order.created_at)}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
                   <span className={`chip ${ORDER_STATUS_COLORS[order.status]}`}>{ORDER_STATUS_LABELS[order.status]}</span>
-                  <span className="font-display text-sm font-700 text-rose-900">{formatPrice(Number(order.total))}</span>
+                  <span className="font-display text-sm font-bold text-rose-900">{formatPrice(Number(order.total))}</span>
                   <ChevronRight className={`h-4 w-4 text-rose-400 transition-transform ${expanded === order.id ? 'rotate-90' : ''}`} />
                 </div>
               </button>
@@ -288,8 +292,8 @@ function OrdersTab({ orders, onUpdate }: { orders: Order[]; onUpdate: () => void
                           </div>
                         ))}
                         <div className="flex justify-between border-t border-cream-200 pt-2 text-sm">
-                          <span className="font-600 text-rose-900">Total</span>
-                          <span className="font-700 text-rose-700">{formatPrice(Number(order.total))}</span>
+                          <span className="font-semibold text-rose-900">Total</span>
+                          <span className="font-bold text-rose-700">{formatPrice(Number(order.total))}</span>
                         </div>
                       </div>
                     </div>
@@ -344,7 +348,7 @@ function ProductsTab({ products, categories, onUpdate }: { products: Product[]; 
   return (
     <div>
       <div className="flex items-center justify-between">
-        <h2 className="font-display text-lg font-600 text-rose-900">Products ({products.length})</h2>
+        <h2 className="font-display text-lg font-semibold text-rose-900">Products ({products.length})</h2>
         <button onClick={() => { setEditing(null); setShowForm(true); }} className="btn-primary">
           <Plus className="h-4 w-4" /> Add Product
         </button>
@@ -375,7 +379,7 @@ function ProductsTab({ products, categories, onUpdate }: { products: Product[]; 
                 <div className="flex flex-1 flex-col">
                   <div className="flex items-start justify-between gap-2">
                     <div>
-                      <p className="font-display text-sm font-600 text-rose-900">{p.name}</p>
+                      <p className="font-display text-sm font-semibold text-rose-900">{p.name}</p>
                       <p className="text-xs text-rose-400">{cat?.name ?? 'Uncategorised'}</p>
                     </div>
                     <div className="flex gap-1">
@@ -388,7 +392,7 @@ function ProductsTab({ products, categories, onUpdate }: { products: Product[]; 
                     </div>
                   </div>
                   <div className="mt-auto flex items-center gap-2 pt-2">
-                    <span className="font-display text-sm font-700 text-rose-700">{formatPrice(p.price)}</span>
+                    <span className="font-display text-sm font-bold text-rose-700">{formatPrice(p.price)}</span>
                     {p.featured && <span className="chip bg-gold-100 text-gold-700">Featured</span>}
                     {!p.active && <span className="chip bg-cream-200 text-rose-500">Hidden</span>}
                   </div>
@@ -454,7 +458,7 @@ function ProductForm({ product, categories, onClose, onSaved }: {
       <div className="absolute inset-0 bg-rose-900/40 backdrop-blur-sm animate-fade-in" onClick={onClose} />
       <div className="relative z-10 w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-4xl bg-cream-50 shadow-float animate-scale-in">
         <div className="flex items-center justify-between border-b border-cream-200 px-6 py-4">
-          <h2 className="font-display text-lg font-700 text-rose-900">{product ? 'Edit Product' : 'Add Product'}</h2>
+          <h2 className="font-display text-lg font-bold text-rose-900">{product ? 'Edit Product' : 'Add Product'}</h2>
           <button onClick={onClose} className="flex h-9 w-9 items-center justify-center rounded-full text-rose-400 hover:bg-rose-100">
             <X className="h-5 w-5" />
           </button>
@@ -543,7 +547,7 @@ function CategoriesTab({ categories, products, onUpdate }: { categories: Categor
   return (
     <div>
       <div className="flex items-center justify-between">
-        <h2 className="font-display text-lg font-600 text-rose-900">Categories ({categories.length})</h2>
+        <h2 className="font-display text-lg font-semibold text-rose-900">Categories ({categories.length})</h2>
         <button onClick={() => { setEditing(null); setShowForm(true); }} className="btn-primary">
           <Plus className="h-4 w-4" /> Add Category
         </button>
@@ -573,7 +577,7 @@ function CategoriesTab({ categories, products, onUpdate }: { categories: Categor
                 <div className="flex flex-1 flex-col">
                   <div className="flex items-start justify-between gap-2">
                     <div>
-                      <p className="font-display text-sm font-600 text-rose-900">{c.name}</p>
+                      <p className="font-display text-sm font-semibold text-rose-900">{c.name}</p>
                       <p className="text-xs text-rose-400">/{c.slug}</p>
                     </div>
                     <div className="flex gap-1">
@@ -642,7 +646,7 @@ function CategoryForm({ category, onClose, onSaved }: {
       <div className="absolute inset-0 bg-rose-900/40 backdrop-blur-sm animate-fade-in" onClick={onClose} />
       <div className="relative z-10 w-full max-w-md rounded-4xl bg-cream-50 shadow-float animate-scale-in">
         <div className="flex items-center justify-between border-b border-cream-200 px-6 py-4">
-          <h2 className="font-display text-lg font-700 text-rose-900">{category ? 'Edit Category' : 'Add Category'}</h2>
+          <h2 className="font-display text-lg font-bold text-rose-900">{category ? 'Edit Category' : 'Add Category'}</h2>
           <button onClick={onClose} className="flex h-9 w-9 items-center justify-center rounded-full text-rose-400 hover:bg-rose-100">
             <X className="h-5 w-5" />
           </button>

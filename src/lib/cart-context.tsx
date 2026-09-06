@@ -1,3 +1,5 @@
+'use client';
+
 import { createContext, useContext, useState, useCallback, useEffect, type ReactNode } from 'react';
 import type { Product, CartItem } from '@/lib/types';
 
@@ -19,15 +21,18 @@ const CartContext = createContext<CartContextValue | null>(null);
 const STORAGE_KEY = 'knitella-cart';
 
 export function CartProvider({ children }: { children: ReactNode }) {
-  const [items, setItems] = useState<CartItem[]>(() => {
+  const [items, setItems] = useState<CartItem[]>([]);
+  const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
-      return stored ? (JSON.parse(stored) as CartItem[]) : [];
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- intentional: client-only hydration read
+      if (stored) setItems(JSON.parse(stored) as CartItem[]);
     } catch {
-      return [];
+      // ignore
     }
-  });
-  const [isOpen, setIsOpen] = useState(false);
+  }, []);
 
   useEffect(() => {
     try {

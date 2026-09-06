@@ -1,13 +1,18 @@
+'use client';
+
 import { useRef } from 'react';
-import { ArrowRight, Sparkles, Heart, Gift, Scissors, Instagram, Wand2, PenTool, PackageCheck } from 'lucide-react';
+import { ArrowRight, Sparkles, Heart, Gift, Scissors, AtSign, Wand2, PenTool, PackageCheck } from 'lucide-react';
 import { motion, useScroll, useTransform } from 'framer-motion';
+import Link from 'next/link';
 import type { Category, Product } from '@/lib/types';
 import { ProductCard } from '@/components/ProductCard';
 import { Reveal, StaggerGroup, StaggerItem } from '@/components/Reveal';
 import { WireSquiggle, WireDivider } from '@/components/WireSquiggle';
 import { Marquee } from '@/components/Marquee';
 import { accentFor } from '@/lib/category-style';
-import { navigate } from '@/lib/router';
+import { INSTAGRAM_URL } from '@/lib/site';
+
+const MotionLink = motion.create(Link);
 
 interface HomePageProps {
   categories: Category[];
@@ -32,10 +37,11 @@ const PROCESS_STEPS = [
   },
 ];
 
-export function HomePage({ categories, products }: HomePageProps) {
+export function HomePageClient({ categories, products }: HomePageProps) {
   const featured = products.filter((p) => p.featured).slice(0, 8);
   const sortedCategories = [...categories].sort((a, b) => a.sort_order - b.sort_order);
   const instagramProducts = products.slice(0, 5);
+  const firstCategorySlug = sortedCategories[0]?.slug ?? '';
 
   const heroRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start', 'end start'] });
@@ -73,7 +79,7 @@ export function HomePage({ categories, products }: HomePageProps) {
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.1 }}
-                className="mt-5 font-display text-5xl font-700 leading-[1.1] text-rose-900 text-balance sm:text-6xl"
+                className="mt-5 font-display text-5xl font-bold leading-[1.1] text-rose-900 text-balance sm:text-6xl"
               >
                 Handmade pipe cleaner magic, crafted one{' '}
                 <span className="relative inline-block whitespace-nowrap font-display italic text-rose-600">
@@ -96,13 +102,15 @@ export function HomePage({ categories, products }: HomePageProps) {
                 transition={{ duration: 0.6, delay: 0.3 }}
                 className="mt-8 flex flex-wrap gap-3"
               >
-                <button onClick={() => navigate('/shop')} className="btn-primary">
+                <Link href="/shop" className="btn-primary">
                   Shop Collection
                   <ArrowRight className="h-4 w-4" />
-                </button>
-                <button onClick={() => navigate('/shop/bouquets')} className="btn-secondary">
-                  Explore Bouquets
-                </button>
+                </Link>
+                {firstCategorySlug && (
+                  <Link href={`/shop/${firstCategorySlug}`} className="btn-secondary">
+                    Explore {sortedCategories[0].name}
+                  </Link>
+                )}
               </motion.div>
               <motion.div
                 initial={{ opacity: 0, y: 16 }}
@@ -116,7 +124,7 @@ export function HomePage({ categories, products }: HomePageProps) {
                   { value: '100%', label: 'Handmade' },
                 ].map((stat) => (
                   <div key={stat.label}>
-                    <p className="font-display text-2xl font-700 text-rose-700">{stat.value}</p>
+                    <p className="font-display text-2xl font-bold text-rose-700">{stat.value}</p>
                     <p className="text-xs uppercase tracking-wider text-rose-400">{stat.label}</p>
                   </div>
                 ))}
@@ -133,12 +141,12 @@ export function HomePage({ categories, products }: HomePageProps) {
                 {sortedCategories.slice(0, 4).map((cat, i) => {
                   const accent = accentFor(i);
                   return (
-                    <motion.button
+                    <MotionLink
                       key={cat.id}
-                      onClick={() => navigate(`/shop/${cat.slug}`)}
+                      href={`/shop/${cat.slug}`}
                       whileHover={{ y: -6, scale: 1.02 }}
                       transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-                      className={`group relative overflow-hidden rounded-3xl shadow-card ${i % 2 === 0 ? 'mt-0' : 'mt-8'}`}
+                      className={`group relative block overflow-hidden rounded-3xl shadow-card ${i % 2 === 0 ? 'mt-0' : 'mt-8'}`}
                     >
                       <div className="aspect-[3/4] overflow-hidden bg-cream-100">
                         {cat.image_url && (
@@ -152,9 +160,9 @@ export function HomePage({ categories, products }: HomePageProps) {
                       <div className="absolute inset-0 bg-gradient-to-t from-rose-900/60 via-transparent to-transparent" />
                       <span className={`absolute right-3 top-3 h-2.5 w-2.5 rounded-full ${accent.solid}`} />
                       <div className="absolute bottom-0 left-0 right-0 p-4 text-left">
-                        <p className="font-display text-lg font-600 text-white">{cat.name}</p>
+                        <p className="font-display text-lg font-semibold text-white">{cat.name}</p>
                       </div>
-                    </motion.button>
+                    </MotionLink>
                   );
                 })}
               </div>
@@ -182,7 +190,7 @@ export function HomePage({ categories, products }: HomePageProps) {
                   <v.icon className="h-5 w-5" />
                 </div>
                 <div>
-                  <p className="font-display text-sm font-600 text-rose-900">{v.title}</p>
+                  <p className="font-display text-sm font-semibold text-rose-900">{v.title}</p>
                   <p className="text-xs text-rose-500/70">{v.desc}</p>
                 </div>
               </div>
@@ -195,7 +203,7 @@ export function HomePage({ categories, products }: HomePageProps) {
       <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
         <Reveal className="text-center">
           <span className="chip bg-sage-100 text-sage-700">Browse by category</span>
-          <h2 className="mt-3 font-display text-4xl font-700 text-rose-900">Find your perfect piece</h2>
+          <h2 className="mt-3 font-display text-4xl font-bold text-rose-900">Find your perfect piece</h2>
           <p className="mt-2 text-rose-600/70">Explore our collections of handmade pipe cleaner creations</p>
         </Reveal>
         <StaggerGroup className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
@@ -203,7 +211,7 @@ export function HomePage({ categories, products }: HomePageProps) {
             const accent = accentFor(i);
             return (
               <StaggerItem key={cat.id}>
-                <button onClick={() => navigate(`/shop/${cat.slug}`)} className="group block w-full text-left">
+                <Link href={`/shop/${cat.slug}`} className="group block w-full text-left">
                   <motion.div whileHover={{ y: -6 }} transition={{ type: 'spring', stiffness: 300, damping: 20 }} className="card overflow-hidden">
                     <div className="relative aspect-[4/3] overflow-hidden bg-cream-100">
                       {cat.image_url && (
@@ -216,14 +224,14 @@ export function HomePage({ categories, products }: HomePageProps) {
                       <span className={`absolute left-3 top-3 h-2.5 w-2.5 rounded-full ${accent.solid} ring-4 ring-white/60`} />
                     </div>
                     <div className="p-5">
-                      <h3 className="font-display text-xl font-600 text-rose-900">{cat.name}</h3>
+                      <h3 className="font-display text-xl font-semibold text-rose-900">{cat.name}</h3>
                       <p className="mt-1 text-sm leading-relaxed text-rose-600/70 line-clamp-2">{cat.description}</p>
                       <span className={`mt-3 inline-flex items-center gap-1 text-sm font-medium ${accent.text} transition-all group-hover:gap-2`}>
                         Shop now <ArrowRight className="h-3.5 w-3.5" />
                       </span>
                     </div>
                   </motion.div>
-                </button>
+                </Link>
               </StaggerItem>
             );
           })}
@@ -235,8 +243,8 @@ export function HomePage({ categories, products }: HomePageProps) {
       {/* Process */}
       <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
         <Reveal className="text-center">
-          <span className="chip bg-rose-100 text-rose-700">How it's made</span>
-          <h2 className="mt-3 font-display text-4xl font-700 text-rose-900">From plain wire to keepsake</h2>
+          <span className="chip bg-rose-100 text-rose-700">How it&apos;s made</span>
+          <h2 className="mt-3 font-display text-4xl font-bold text-rose-900">From plain wire to keepsake</h2>
           <p className="mx-auto mt-2 max-w-lg text-rose-600/70">Three hands-on steps, followed for every single piece.</p>
         </Reveal>
         <div className="relative mt-14 grid gap-10 sm:grid-cols-3">
@@ -248,10 +256,10 @@ export function HomePage({ categories, products }: HomePageProps) {
               <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-white text-rose-600 shadow-card">
                 <step.icon className="h-6 w-6" />
               </div>
-              <p className="mt-4 font-display text-xs font-700 uppercase tracking-[0.3em] text-rose-400">
+              <p className="mt-4 font-display text-xs font-bold uppercase tracking-[0.3em] text-rose-400">
                 0{i + 1}
               </p>
-              <h3 className="mt-1 font-display text-xl font-600 text-rose-900">{step.title}</h3>
+              <h3 className="mt-1 font-display text-xl font-semibold text-rose-900">{step.title}</h3>
               <p className="mx-auto mt-2 max-w-[220px] text-sm leading-relaxed text-rose-600/70">{step.desc}</p>
             </Reveal>
           ))}
@@ -265,11 +273,11 @@ export function HomePage({ categories, products }: HomePageProps) {
             <Reveal className="flex items-end justify-between">
               <div>
                 <span className="chip bg-gold-100 text-gold-700">Customer favourites</span>
-                <h2 className="mt-3 font-display text-4xl font-700 text-rose-900">Featured pieces</h2>
+                <h2 className="mt-3 font-display text-4xl font-bold text-rose-900">Featured pieces</h2>
               </div>
-              <button onClick={() => navigate('/shop')} className="btn-ghost hidden sm:flex">
+              <Link href="/shop" className="btn-ghost hidden sm:flex">
                 View all <ArrowRight className="h-4 w-4" />
-              </button>
+              </Link>
             </Reveal>
             <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
               {featured.map((product, i) => (
@@ -286,17 +294,12 @@ export function HomePage({ categories, products }: HomePageProps) {
           <Reveal className="flex flex-wrap items-end justify-between gap-4">
             <div>
               <span className="chip bg-sky-100 text-sky-700">
-                <Instagram className="h-3.5 w-3.5" />
+                <AtSign className="h-3.5 w-3.5" />
                 Behind the scenes
               </span>
-              <h2 className="mt-3 font-display text-3xl font-700 text-rose-900">Follow the making of it</h2>
+              <h2 className="mt-3 font-display text-3xl font-bold text-rose-900">Follow the making of it</h2>
             </div>
-            <a
-              href="https://www.instagram.com/knitella.studio/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-ghost"
-            >
+            <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" className="btn-ghost">
               @knitella.studio <ArrowRight className="h-4 w-4" />
             </a>
           </Reveal>
@@ -304,7 +307,7 @@ export function HomePage({ categories, products }: HomePageProps) {
             {instagramProducts.map((p) => (
               <StaggerItem key={p.id} y={16}>
                 <a
-                  href="https://www.instagram.com/knitella.studio/"
+                  href={INSTAGRAM_URL}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="group relative block aspect-square overflow-hidden rounded-2xl bg-cream-100"
@@ -317,7 +320,7 @@ export function HomePage({ categories, products }: HomePageProps) {
                     />
                   )}
                   <div className="absolute inset-0 flex items-center justify-center bg-rose-900/0 transition-colors duration-300 group-hover:bg-rose-900/30">
-                    <Instagram className="h-6 w-6 text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                    <AtSign className="h-6 w-6 text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                   </div>
                 </a>
               </StaggerItem>
@@ -341,18 +344,18 @@ export function HomePage({ categories, products }: HomePageProps) {
               transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
             />
             <div className="relative">
-              <h2 className="font-display text-3xl font-700 text-white sm:text-4xl">Have something special in mind?</h2>
+              <h2 className="font-display text-3xl font-bold text-white sm:text-4xl">Have something special in mind?</h2>
               <p className="mx-auto mt-3 max-w-md text-rose-100">
-                We take custom orders! Whether it's a specific colour, a themed bouquet, or a unique gift — let's create something together.
+                We take custom orders! Whether it&apos;s a specific colour, a themed bouquet, or a unique gift — let&apos;s create something together.
               </p>
-              <motion.button
-                onClick={() => navigate('/shop')}
+              <MotionLink
+                href="/shop"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.97 }}
                 className="mt-6 inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-semibold text-rose-700 shadow-soft"
               >
                 Start Browsing <ArrowRight className="h-4 w-4" />
-              </motion.button>
+              </MotionLink>
             </div>
           </div>
         </Reveal>

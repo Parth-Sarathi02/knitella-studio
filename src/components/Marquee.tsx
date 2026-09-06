@@ -1,3 +1,5 @@
+'use client';
+
 import { Sparkles } from 'lucide-react';
 
 interface MarqueeProps {
@@ -14,7 +16,7 @@ export function Marquee({ items, className = '' }: MarqueeProps) {
           <div key={copy} className="flex flex-shrink-0 items-center" aria-hidden={copy === 1}>
             {track.map((item, i) => (
               <span key={`${copy}-${i}`} className="mx-4 flex items-center gap-3 whitespace-nowrap">
-                <span className="font-display text-sm font-600 uppercase tracking-[0.2em]">{item}</span>
+                <span className="font-display text-sm font-semibold uppercase tracking-[0.2em]">{item}</span>
                 <Sparkles className="h-3.5 w-3.5 flex-shrink-0 opacity-60" />
               </span>
             ))}

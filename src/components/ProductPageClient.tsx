@@ -1,10 +1,12 @@
+'use client';
+
 import { useRef, useState } from 'react';
 import { ArrowLeft, Plus, Minus, ShoppingBag, Check, Heart, Truck, Shield, Sparkles } from 'lucide-react';
 import { motion, useMotionValue, useSpring, useTransform, AnimatePresence } from 'framer-motion';
+import Link from 'next/link';
 import type { Product, Category } from '@/lib/types';
 import { formatPrice } from '@/lib/format';
 import { useCart } from '@/lib/cart-context';
-import { navigate } from '@/lib/router';
 import { Reveal } from '@/components/Reveal';
 import { WireSquiggle } from '@/components/WireSquiggle';
 
@@ -14,7 +16,7 @@ interface ProductPageProps {
   relatedProducts: Product[];
 }
 
-export function ProductPage({ product, category, relatedProducts }: ProductPageProps) {
+export function ProductPageClient({ product, category, relatedProducts }: ProductPageProps) {
   const { addItem, openCart } = useCart();
   const [quantity, setQuantity] = useState(1);
   const [added, setAdded] = useState(false);
@@ -45,14 +47,12 @@ export function ProductPage({ product, category, relatedProducts }: ProductPageP
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-      <motion.button
-        onClick={() => navigate('/shop')}
-        whileHover={{ x: -3 }}
-        className="inline-flex items-center gap-1.5 text-sm font-medium text-rose-600 transition-colors hover:text-rose-800"
-      >
-        <ArrowLeft className="h-4 w-4" />
-        Back to Shop
-      </motion.button>
+      <motion.div whileHover={{ x: -3 }} className="inline-block">
+        <Link href="/shop" className="inline-flex items-center gap-1.5 text-sm font-medium text-rose-600 transition-colors hover:text-rose-800">
+          <ArrowLeft className="h-4 w-4" />
+          Back to Shop
+        </Link>
+      </motion.div>
 
       <div className="mt-6 grid gap-10 lg:grid-cols-2">
         {/* Image */}
@@ -91,18 +91,15 @@ export function ProductPage({ product, category, relatedProducts }: ProductPageP
         {/* Details */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.1 }}>
           {category && (
-            <button
-              onClick={() => navigate(`/shop/${category.slug}`)}
-              className="chip bg-rose-100 text-rose-700 transition-colors hover:bg-rose-200"
-            >
+            <Link href={`/shop/${category.slug}`} className="chip bg-rose-100 text-rose-700 transition-colors hover:bg-rose-200">
               {category.name}
-            </button>
+            </Link>
           )}
-          <h1 className="relative mt-3 inline-block font-display text-3xl font-700 text-rose-900 sm:text-4xl">
+          <h1 className="relative mt-3 inline-block font-display text-3xl font-bold text-rose-900 sm:text-4xl">
             {product.name}
             <WireSquiggle className="absolute -bottom-2 left-0 h-3 w-2/3 text-rose-300" color="#f0a7ba" />
           </h1>
-          <p className="mt-5 font-display text-3xl font-700 text-rose-700">{formatPrice(product.price)}</p>
+          <p className="mt-5 font-display text-3xl font-bold text-rose-700">{formatPrice(product.price)}</p>
           <p className="mt-4 leading-relaxed text-rose-700/80">{product.description}</p>
 
           {/* Quantity selector */}
@@ -123,7 +120,7 @@ export function ProductPage({ product, category, relatedProducts }: ProductPageP
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 6 }}
                   transition={{ duration: 0.15 }}
-                  className="inline-block w-10 text-center font-display text-lg font-600 text-rose-900"
+                  className="inline-block w-10 text-center font-display text-lg font-semibold text-rose-900"
                 >
                   {quantity}
                 </motion.span>
@@ -182,7 +179,7 @@ export function ProductPage({ product, category, relatedProducts }: ProductPageP
       {relatedProducts.length > 0 && (
         <section className="mt-20">
           <Reveal>
-            <h2 className="font-display text-2xl font-700 text-rose-900">You might also like</h2>
+            <h2 className="font-display text-2xl font-bold text-rose-900">You might also like</h2>
           </Reveal>
           <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {relatedProducts.map((p, i) => (
@@ -204,27 +201,28 @@ function ProductCardMini({ product, index }: { product: Product; index: number }
       transition={{ duration: 0.4, delay: index * 0.07 }}
       whileHover={{ y: -6 }}
       whileTap={{ scale: 0.97 }}
-      onClick={() => navigate(`/product/${product.id}`)}
-      className="group h-full cursor-pointer"
+      className="h-full"
     >
-      <div className="card flex h-full flex-col overflow-hidden shadow-card transition-shadow duration-300 hover:shadow-float">
-        <div className="relative aspect-square overflow-hidden bg-cream-100">
-          {product.image_url && (
-            <img
-              src={product.image_url}
-              alt={product.name}
-              loading="lazy"
-              className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-            />
-          )}
+      <Link href={`/product/${product.id}`} className="group block h-full">
+        <div className="card flex h-full flex-col overflow-hidden shadow-card transition-shadow duration-300 hover:shadow-float">
+          <div className="relative aspect-square overflow-hidden bg-cream-100">
+            {product.image_url && (
+              <img
+                src={product.image_url}
+                alt={product.name}
+                loading="lazy"
+                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+              />
+            )}
+          </div>
+          <div className="flex flex-1 flex-col p-4">
+            <h3 className="line-clamp-2 min-h-[2.5rem] font-display text-sm font-semibold leading-snug text-rose-900">
+              {product.name}
+            </h3>
+            <p className="mt-auto pt-1.5 font-display text-base font-bold text-rose-700">{formatPrice(product.price)}</p>
+          </div>
         </div>
-        <div className="flex flex-1 flex-col p-4">
-          <h3 className="line-clamp-2 min-h-[2.5rem] font-display text-sm font-600 leading-snug text-rose-900">
-            {product.name}
-          </h3>
-          <p className="mt-auto pt-1.5 font-display text-base font-700 text-rose-700">{formatPrice(product.price)}</p>
-        </div>
-      </div>
+      </Link>
     </motion.div>
   );
 }

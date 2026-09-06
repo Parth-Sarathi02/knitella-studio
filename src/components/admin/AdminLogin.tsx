@@ -1,7 +1,9 @@
+'use client';
+
 import { useState } from 'react';
 import { Lock, Loader2, Sparkles } from 'lucide-react';
+import Link from 'next/link';
 import { useAuth } from '@/lib/auth-context';
-import { navigate } from '@/lib/router';
 
 export function AdminLogin() {
   const { signIn } = useAuth();
@@ -24,22 +26,22 @@ export function AdminLogin() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-cream-100 to-rose-50 px-4">
       <div className="w-full max-w-md animate-scale-in">
-        <button onClick={() => navigate('/')} className="mx-auto mb-8 flex items-center gap-2.5">
+        <Link href="/" className="mx-auto mb-8 flex items-center gap-2.5">
           <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-rose-500 text-white shadow-soft">
             <Sparkles className="h-6 w-6" />
           </div>
           <div className="text-left leading-none">
-            <span className="block font-display text-xl font-600 text-rose-900">Knitella</span>
+            <span className="block font-display text-xl font-semibold text-rose-900">Knitella</span>
             <span className="block text-xs font-medium uppercase tracking-[0.2em] text-rose-400">Studio</span>
           </div>
-        </button>
+        </Link>
 
         <div className="card p-8">
           <div className="mb-6 text-center">
             <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-rose-50 text-rose-600">
               <Lock className="h-6 w-6" />
             </div>
-            <h1 className="mt-4 font-display text-2xl font-700 text-rose-900">Admin Panel</h1>
+            <h1 className="mt-4 font-display text-2xl font-bold text-rose-900">Admin Panel</h1>
             <p className="mt-1 text-sm text-rose-500/70">Sign in to manage your store</p>
           </div>
 
@@ -86,13 +88,13 @@ export function AdminLogin() {
           </form>
 
           <p className="mt-5 text-center text-xs text-rose-400">
-            Don't have an account? Create one from your Supabase dashboard.
+            Don&apos;t have an account? Create one from your Supabase dashboard.
           </p>
         </div>
 
-        <button onClick={() => navigate('/')} className="mt-6 block w-full text-center text-sm text-rose-500 hover:text-rose-700">
+        <Link href="/" className="mt-6 block w-full text-center text-sm text-rose-500 hover:text-rose-700">
           ← Back to store
-        </button>
+        </Link>
       </div>
     </div>
   );
