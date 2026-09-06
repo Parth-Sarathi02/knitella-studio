@@ -47,9 +47,6 @@ export const metadata: Metadata = {
     title: `${SITE_NAME} — Handmade Pipe Cleaner Bouquets & Gifts`,
     description: SITE_DESCRIPTION,
   },
-  icons: {
-    icon: '/favicon.ico',
-  },
   robots: {
     index: true,
     follow: true,
