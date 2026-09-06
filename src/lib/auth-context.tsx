@@ -1,6 +1,8 @@
+'use client';
+
 import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from 'react';
 import type { Session } from '@supabase/supabase-js';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/lib/supabase/client';
 
 interface AuthContextValue {
   session: Session | null;

@@ -1,6 +1,8 @@
-import { Sparkles, Instagram, Heart } from 'lucide-react';
+'use client';
+
+import { Sparkles, AtSign, Heart } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { navigate } from '@/lib/router';
+import Link from 'next/link';
 import { WireDivider } from '@/components/WireSquiggle';
 
 interface FooterProps {
@@ -19,7 +21,7 @@ export function Footer({ categories }: FooterProps) {
                 <Sparkles className="h-5 w-5" />
               </div>
               <div className="leading-none">
-                <span className="block font-display text-lg font-600 text-rose-900">Knitella</span>
+                <span className="block font-display text-lg font-semibold text-rose-900">Knitella</span>
                 <span className="block text-[11px] font-medium uppercase tracking-[0.2em] text-rose-400">Studio</span>
               </div>
             </div>
@@ -36,32 +38,32 @@ export function Footer({ categories }: FooterProps) {
                 className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-rose-600 shadow-soft transition-colors hover:bg-rose-50 hover:text-rose-700"
                 aria-label="Instagram"
               >
-                <Instagram className="h-4.5 w-4.5" />
+                <AtSign className="h-4.5 w-4.5" />
               </motion.a>
             </div>
           </div>
 
           <div>
-            <h3 className="font-display text-sm font-600 uppercase tracking-wider text-rose-900">Shop</h3>
+            <h3 className="font-display text-sm font-semibold uppercase tracking-wider text-rose-900">Shop</h3>
             <ul className="mt-4 space-y-2.5 text-sm">
               <li>
-                <button onClick={() => navigate('/shop')} className="text-rose-700/80 transition-colors hover:text-rose-900">All Products</button>
+                <Link href="/shop" className="text-rose-700/80 transition-colors hover:text-rose-900">All Products</Link>
               </li>
               {categories.map((c) => (
                 <li key={c.slug}>
-                  <button onClick={() => navigate(`/shop/${c.slug}`)} className="text-rose-700/80 transition-colors hover:text-rose-900">
+                  <Link href={`/shop/${c.slug}`} className="text-rose-700/80 transition-colors hover:text-rose-900">
                     {c.name}
-                  </button>
+                  </Link>
                 </li>
               ))}
             </ul>
           </div>
 
           <div>
-            <h3 className="font-display text-sm font-600 uppercase tracking-wider text-rose-900">Studio</h3>
+            <h3 className="font-display text-sm font-semibold uppercase tracking-wider text-rose-900">Studio</h3>
             <ul className="mt-4 space-y-2.5 text-sm">
               <li>
-                <button onClick={() => navigate('/admin')} className="text-rose-700/80 transition-colors hover:text-rose-900">Admin Panel</button>
+                <Link href="/admin" className="text-rose-700/80 transition-colors hover:text-rose-900">Admin Panel</Link>
               </li>
               <li className="text-rose-700/80">Custom Orders Welcome</li>
               <li className="text-rose-700/80">Made in India</li>
