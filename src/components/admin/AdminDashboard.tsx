@@ -2,12 +2,13 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { LayoutDashboard, Package, Tag, LogOut, Sparkles, Plus, X, Edit3, Trash2, ChevronRight, Phone, Mail, MapPin, ShoppingBag, TrendingUp, Clock } from 'lucide-react';
+import { LayoutDashboard, Package, Tag, LogOut, Sparkles, Plus, X, Edit3, Trash2, ChevronRight, Phone, Mail, MapPin, ShoppingBag, TrendingUp, Clock, FolderUp } from 'lucide-react';
 import { useAuth } from '@/lib/auth-context';
 import { supabase } from '@/lib/supabase/client';
 import { formatPrice, formatDateTime, slugify } from '@/lib/format';
 import type { Category, Product, Order, OrderStatus } from '@/lib/types';
 import { ORDER_STATUS_LABELS, ORDER_STATUS_COLORS } from '@/lib/types';
+import { BulkUploadModal } from '@/components/admin/BulkUploadModal';
 
 type Tab = 'dashboard' | 'orders' | 'products' | 'categories';
 
@@ -332,6 +333,7 @@ function OrdersTab({ orders, onUpdate }: { orders: Order[]; onUpdate: () => void
 
 function ProductsTab({ products, categories, onUpdate }: { products: Product[]; categories: Category[]; onUpdate: () => void }) {
   const [showForm, setShowForm] = useState(false);
+  const [showBulkUpload, setShowBulkUpload] = useState(false);
   const [editing, setEditing] = useState<Product | null>(null);
 
   const handleEdit = (product: Product) => {
@@ -347,11 +349,16 @@ function ProductsTab({ products, categories, onUpdate }: { products: Product[]; 
 
   return (
     <div>
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <h2 className="font-display text-lg font-semibold text-rose-900">Products ({products.length})</h2>
-        <button onClick={() => { setEditing(null); setShowForm(true); }} className="btn-primary">
-          <Plus className="h-4 w-4" /> Add Product
-        </button>
+        <div className="flex gap-2">
+          <button onClick={() => setShowBulkUpload(true)} className="btn-secondary">
+            <FolderUp className="h-4 w-4" /> Bulk Upload
+          </button>
+          <button onClick={() => { setEditing(null); setShowForm(true); }} className="btn-primary">
+            <Plus className="h-4 w-4" /> Add Product
+          </button>
+        </div>
       </div>
 
       {showForm && (
@@ -360,6 +367,14 @@ function ProductsTab({ products, categories, onUpdate }: { products: Product[]; 
           categories={categories}
           onClose={() => { setShowForm(false); setEditing(null); }}
           onSaved={() => { setShowForm(false); setEditing(null); onUpdate(); }}
+        />
+      )}
+
+      {showBulkUpload && (
+        <BulkUploadModal
+          categories={categories}
+          onClose={() => setShowBulkUpload(false)}
+          onDone={() => { setShowBulkUpload(false); onUpdate(); }}
         />
       )}
 
